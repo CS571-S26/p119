@@ -22,6 +22,22 @@ export interface CourseStats {
   cumulativeARate: number | null
   termClassSize: number | null
   cumulativeAverageClassSize: number | null
+  gradeDistribution: GradeDistribution
+}
+
+export interface GradeDistribution {
+  a: number
+  ab: number
+  b: number
+  bc: number
+  c: number
+  d: number
+  f: number
+  other: number
+}
+
+export function totalGrades(g: GradeDistribution): number {
+  return g.a + g.ab + g.b + g.bc + g.c + g.d + g.f + g.other
 }
 
 export function formatCourseReference(ref: CourseReference): string {
@@ -49,4 +65,14 @@ export const SAMPLE_STATS: CourseStats = {
   cumulativeARate: 48.6,
   termClassSize: 312,
   cumulativeAverageClassSize: 288,
+  gradeDistribution: {
+    a: 1842,
+    ab: 684,
+    b: 512,
+    bc: 231,
+    c: 168,
+    d: 64,
+    f: 41,
+    other: 92,
+  },
 }

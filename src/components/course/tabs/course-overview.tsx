@@ -2,6 +2,7 @@ import { GPADataCard } from "@/components/data-card/gpa-data-card"
 import { CompletionRateDataCard } from "@/components/data-card/completion-rate-data-card"
 import { ARateDataCard } from "@/components/data-card/a-rate-data-card"
 import { ClassSizeDataCard } from "@/components/data-card/class-size-data-card"
+import { GradeDistributionChart } from "@/components/course/grade-distribution-chart"
 import type { CourseStats } from "@/lib/course-types"
 
 interface CourseOverviewProps {
@@ -29,6 +30,7 @@ export function CourseOverview({ stats }: CourseOverviewProps) {
           cumulativeAverageClassSize={stats.cumulativeAverageClassSize}
         />
       </div>
+      <GradeDistributionChart grades={stats.gradeDistribution} />
     </div>
   )
 }
