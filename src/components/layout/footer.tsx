@@ -4,7 +4,7 @@ export function Footer() {
       <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 md:h-24 md:flex-row">
         <div className="text-muted-foreground flex flex-col gap-1 text-center text-sm leading-loose text-balance md:text-left">
           <p>
-            Rebuilt by{" "}
+            Built by{" "}
             <a
               href="https://twango.dev"
               target="_blank"
