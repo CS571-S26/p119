@@ -13,8 +13,8 @@ interface CourseDetailsProps {
 
 export function CourseDetails({ course }: CourseDetailsProps) {
   return (
-    <div className="mt-2 space-y-4 lg:col-span-3">
-      <Card>
+    <div className="mt-2 lg:col-span-3 lg:relative">
+      <Card className="lg:absolute lg:inset-0 lg:overflow-y-auto">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-base font-medium">
             Course Description

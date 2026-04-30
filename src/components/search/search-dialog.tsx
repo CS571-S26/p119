@@ -83,6 +83,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
         value={query}
         onValueChange={handleQueryChange}
         placeholder="Search courses, instructors, subjects..."
+        aria-label="Search courses, instructors, and subjects"
       />
       <CommandList>
         {loading && (
