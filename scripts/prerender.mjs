@@ -1,37 +1,30 @@
 // @ts-check
-import { readFile, writeFile, mkdir } from "node:fs/promises"
+import { open, readFile, writeFile, mkdir } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..")
 const DIST = join(ROOT, "dist")
-const STATIC_API = process.env.VITE_STATIC_API_URL ?? "https://static.uwcourses.com"
-const SITEMAP_URL = `${STATIC_API}/courses-sitemap.xml`
+const COURSES_FILE = join(ROOT, "data", "courses.jsonl")
 const CONCURRENCY = 50
 const SITE_NAME = "MadMap"
-const FETCH_HEADERS = {
-  "User-Agent":
-    "MadMap-Prerender/1.0 (+https://cs571.wisconsin.twango.dev)",
-  Accept: "application/json, text/xml, */*",
+
+async function* iterCourses() {
+  const fh = await open(COURSES_FILE, "r")
+  try {
+    for await (const line of fh.readLines()) {
+      if (!line.trim()) continue
+      yield JSON.parse(line)
+    }
+  } finally {
+    await fh.close()
+  }
 }
 
-async function fetchCourseIds() {
-  const res = await fetch(SITEMAP_URL, { headers: FETCH_HEADERS })
-  if (!res.ok) throw new Error(`Sitemap fetch failed: ${res.status}`)
-  const xml = await res.text()
-  const ids = []
-  const re = /<loc>https:\/\/uwcourses\.com\/courses\/([^<]+)<\/loc>/g
-  let m
-  while ((m = re.exec(xml)) !== null) ids.push(m[1])
-  return ids
-}
-
-async function fetchCourse(id) {
-  const res = await fetch(`${STATIC_API}/course/${id}.json`, {
-    headers: FETCH_HEADERS,
-  })
-  if (!res.ok) return null
-  return res.json()
+async function loadCourses() {
+  const courses = []
+  for await (const entry of iterCourses()) courses.push(entry)
+  return courses
 }
 
 function escapeHtml(s) {
@@ -87,7 +80,7 @@ async function pool(items, limit, fn) {
       try {
         await fn(items[i], i)
       } catch (err) {
-        console.warn(`[prerender] item ${items[i]} failed:`, err.message)
+        console.warn(`[prerender] item failed:`, err.message)
       }
       done++
       if (done - lastLogged >= 500 || done === total) {
@@ -124,27 +117,18 @@ async function main() {
   // SPA fallback for any path not generated below (catches bad/typoed URLs)
   await writeHtml("404.html", shell)
 
-  // Course routes
-  console.log(`[prerender] fetching course list from ${SITEMAP_URL}`)
-  const ids = await fetchCourseIds()
-  console.log(`[prerender] ${ids.length} courses to render`)
+  console.log(`[prerender] reading ${COURSES_FILE}`)
+  const courses = await loadCourses()
+  console.log(`[prerender] ${courses.length} courses to render`)
 
   let okCount = 0
-  let failCount = 0
-  await pool(ids, CONCURRENCY, async (id) => {
-    const course = await fetchCourse(id)
-    if (!course) {
-      failCount++
-      return
-    }
+  await pool(courses, CONCURRENCY, async ({ id, course }) => {
     await writeHtml(`course/${id}/index.html`, buildCourseHtml(shell, id, course))
     okCount++
   })
 
   const elapsed = ((Date.now() - start) / 1000).toFixed(1)
-  console.log(
-    `[prerender] done in ${elapsed}s — ${okCount} ok, ${failCount} skipped`,
-  )
+  console.log(`[prerender] done in ${elapsed}s — ${okCount} pages`)
 }
 
 main().catch((err) => {
