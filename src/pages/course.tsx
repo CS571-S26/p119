@@ -6,8 +6,6 @@ import { CourseHeader } from "@/components/course/course-header"
 import { CourseTabs } from "@/components/course/course-tabs"
 import { SubjectGraph } from "@/components/graph/subject-graph"
 import {
-  SAMPLE_COURSE,
-  SAMPLE_STATS,
   mapApiCourse,
   mapApiStats,
   type Course,
@@ -21,35 +19,32 @@ declare global {
   }
 }
 
-function getInitialApiCourse(courseId: string | undefined): ApiCourse | null {
-  if (!courseId || typeof window === "undefined") return null
+function getInitialApiCourse(courseId: string): ApiCourse | null {
+  if (typeof window === "undefined") return null
   const data = window.__INITIAL_COURSE_DATA__
   if (!data || data.id !== courseId) return null
   return data.course
 }
 
 export function CoursePage() {
-  const { courseId } = useParams<{ courseId?: string }>()
-  return <CoursePageInner key={courseId ?? "__default__"} courseId={courseId} />
+  const { courseId } = useParams<{ courseId: string }>()
+  if (!courseId) return null
+  return <CoursePageInner key={courseId} courseId={courseId} />
 }
 
-function CoursePageInner({ courseId }: { courseId?: string }) {
+function CoursePageInner({ courseId }: { courseId: string }) {
   const initial = getInitialApiCourse(courseId)
 
-  const [course, setCourse] = useState<Course | null>(() => {
-    if (!courseId) return SAMPLE_COURSE
-    if (initial) return mapApiCourse(initial)
-    return null
-  })
-  const [stats, setStats] = useState<CourseStats | null>(() => {
-    if (!courseId) return SAMPLE_STATS
-    if (initial) return mapApiStats(initial)
-    return null
-  })
+  const [course, setCourse] = useState<Course | null>(() =>
+    initial ? mapApiCourse(initial) : null,
+  )
+  const [stats, setStats] = useState<CourseStats | null>(() =>
+    initial ? mapApiStats(initial) : null,
+  )
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!courseId || initial) return
+    if (initial) return
 
     const controller = new AbortController()
 
@@ -93,7 +88,7 @@ function CoursePageInner({ courseId }: { courseId?: string }) {
     <ContentWrapper className="w-full">
       <CourseHeader course={course} />
       <CourseTabs course={course} stats={stats} />
-      {courseId && subject && (
+      {subject && (
         <section className="mt-8 space-y-3">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Subject Graph</h2>
