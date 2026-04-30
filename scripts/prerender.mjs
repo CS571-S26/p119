@@ -9,9 +9,14 @@ const STATIC_API = process.env.VITE_STATIC_API_URL ?? "https://static.uwcourses.
 const SITEMAP_URL = `${STATIC_API}/courses-sitemap.xml`
 const CONCURRENCY = 50
 const SITE_NAME = "MadMap"
+const FETCH_HEADERS = {
+  "User-Agent":
+    "MadMap-Prerender/1.0 (+https://cs571.wisconsin.twango.dev)",
+  Accept: "application/json, text/xml, */*",
+}
 
 async function fetchCourseIds() {
-  const res = await fetch(SITEMAP_URL)
+  const res = await fetch(SITEMAP_URL, { headers: FETCH_HEADERS })
   if (!res.ok) throw new Error(`Sitemap fetch failed: ${res.status}`)
   const xml = await res.text()
   const ids = []
@@ -22,7 +27,9 @@ async function fetchCourseIds() {
 }
 
 async function fetchCourse(id) {
-  const res = await fetch(`${STATIC_API}/course/${id}.json`)
+  const res = await fetch(`${STATIC_API}/course/${id}.json`, {
+    headers: FETCH_HEADERS,
+  })
   if (!res.ok) return null
   return res.json()
 }
