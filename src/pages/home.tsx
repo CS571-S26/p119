@@ -22,9 +22,9 @@ export function HomePage() {
           <div className="relative mx-auto max-w-5xl px-6 py-28 lg:py-24">
             <div className="relative z-10 mx-auto text-center">
               <Announcement />
-              <PageHeaderHeading>UW Course Explorer</PageHeaderHeading>
+              <PageHeaderHeading>{siteConfig.name}</PageHeaderHeading>
               <PageHeaderDescription>
-                Explore the courses at UW-Madison, again.
+                {siteConfig.description}
               </PageHeaderDescription>
               <p className="text-primary mt-3 text-center text-sm">
                 {siteConfig.disclaimer}

@@ -1,6 +1,6 @@
 export const siteConfig = {
-  name: "UW Course Explorer",
-  description: "Just a quick recreation.",
+  name: "MadMap",
+  description: "An interactive prerequisite map for UW–Madison courses.",
   disclaimer:
     "Not affiliated with the University of Wisconsin-Madison.",
   links: {
