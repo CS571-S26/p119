@@ -1,0 +1,74 @@
+[
+  {
+    "id": "CHEM_103",
+    "label": "CHEM 103",
+    "title": "GENERAL CHEMISTRY I",
+    "total": 50148
+  },
+  {
+    "id": "PSYCH_202",
+    "label": "PSYCH 202",
+    "title": "INTRODUCTION TO PSYCHOLOGY",
+    "total": 49905
+  },
+  {
+    "id": "ECON_101",
+    "label": "ECON 101",
+    "title": "PRINCIPLES OF MICROECONOMICS",
+    "total": 49835
+  },
+  {
+    "id": "MUSIC_113",
+    "label": "MUSIC 113",
+    "title": "MUSIC IN PERFORMANCE",
+    "total": 46325
+  },
+  {
+    "id": "CHEM_104",
+    "label": "CHEM 104",
+    "title": "GENERAL CHEMISTRY II",
+    "total": 37008
+  },
+  {
+    "id": "MATH_221",
+    "label": "MATH 221",
+    "title": "CALCULUS AND ANALYTIC GEOMETRY 1",
+    "total": 35104
+  },
+  {
+    "id": "MATH_222",
+    "label": "MATH 222",
+    "title": "CALCULUS AND ANALYTIC GEOMETRY 2",
+    "total": 32256
+  },
+  {
+    "id": "CHEM_343",
+    "label": "CHEM 343",
+    "title": "ORGANIC CHEMISTRY I",
+    "total": 31243
+  },
+  {
+    "id": "MATH_234",
+    "label": "MATH 234",
+    "title": "CALCULUS--FUNCTIONS OF SEVERAL VARIABLES",
+    "total": 30968
+  },
+  {
+    "id": "NUTRSCI_132",
+    "label": "NUTRSCI 132",
+    "title": "NUTRITION TODAY",
+    "total": 29863
+  },
+  {
+    "id": "ANTHRO_104",
+    "label": "ANTHRO 104",
+    "title": "CULTURAL ANTHROPOLOGY AND HUMAN DIVERSITY",
+    "total": 28696
+  },
+  {
+    "id": "BIOLOGY_ZOOLOGY_101",
+    "label": "ZOOLOGY 101",
+    "title": "ANIMAL BIOLOGY",
+    "total": 26391
+  }
+]
