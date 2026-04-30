@@ -12,20 +12,43 @@ import {
   type Course,
   type CourseStats,
 } from "@/lib/course-types"
-import { getCourse } from "@/lib/api"
+import { getCourse, type ApiCourse } from "@/lib/api"
+
+declare global {
+  interface Window {
+    __INITIAL_COURSE_DATA__?: { id: string; course: ApiCourse }
+  }
+}
+
+function getInitialApiCourse(courseId: string | undefined): ApiCourse | null {
+  if (!courseId || typeof window === "undefined") return null
+  const data = window.__INITIAL_COURSE_DATA__
+  if (!data || data.id !== courseId) return null
+  return data.course
+}
 
 export function CoursePage() {
   const { courseId } = useParams<{ courseId?: string }>()
-  const [course, setCourse] = useState<Course | null>(
-    courseId ? null : SAMPLE_COURSE,
-  )
-  const [stats, setStats] = useState<CourseStats | null>(
-    courseId ? null : SAMPLE_STATS,
-  )
+  return <CoursePageInner key={courseId ?? "__default__"} courseId={courseId} />
+}
+
+function CoursePageInner({ courseId }: { courseId?: string }) {
+  const initial = getInitialApiCourse(courseId)
+
+  const [course, setCourse] = useState<Course | null>(() => {
+    if (!courseId) return SAMPLE_COURSE
+    if (initial) return mapApiCourse(initial)
+    return null
+  })
+  const [stats, setStats] = useState<CourseStats | null>(() => {
+    if (!courseId) return SAMPLE_STATS
+    if (initial) return mapApiStats(initial)
+    return null
+  })
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!courseId) return
+    if (!courseId || initial) return
 
     const controller = new AbortController()
 
@@ -40,7 +63,7 @@ export function CoursePage() {
       })
 
     return () => controller.abort()
-  }, [courseId])
+  }, [courseId, initial])
 
   if (error) {
     return (
