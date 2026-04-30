@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react"
 import { ContentWrapper } from "@/components/content-wrapper"
 import { CourseHeader } from "@/components/course/course-header"
 import { CourseTabs } from "@/components/course/course-tabs"
+import { SubjectGraph } from "@/components/graph/subject-graph"
 import {
   SAMPLE_COURSE,
   SAMPLE_STATS,
@@ -86,10 +87,23 @@ function CoursePageInner({ courseId }: { courseId?: string }) {
     )
   }
 
+  const subject = course.courseReference.subject
+
   return (
     <ContentWrapper className="w-full">
       <CourseHeader course={course} />
       <CourseTabs course={course} stats={stats} />
+      {courseId && subject && (
+        <section className="mt-8 space-y-3">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Subject Graph</h2>
+            <p className="text-sm text-muted-foreground">
+              Prerequisite map for {subject}. The current course is highlighted.
+            </p>
+          </div>
+          <SubjectGraph subject={subject} activeCourseId={courseId} />
+        </section>
+      )}
     </ContentWrapper>
   )
 }
