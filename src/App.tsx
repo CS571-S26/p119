@@ -12,6 +12,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="course" element={<CoursePage />} />
+          <Route path="course/:courseId" element={<CoursePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { BookOpen, GraduationCap, Layers, Loader2 } from "lucide-react"
 import {
   CommandDialog,
@@ -18,6 +19,7 @@ interface SearchDialogProps {
 }
 
 export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
+  const navigate = useNavigate()
   const [query, setQuery] = useState("")
   const debouncedQuery = useDebouncedValue(query, 200)
   const [results, setResults] = useState<SearchResponse | null>(null)
@@ -110,7 +112,10 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
               <CommandItem
                 key={c.course_id}
                 value={`course-${c.course_id}`}
-                onSelect={() => onOpenChange(false)}
+                onSelect={() => {
+                  navigate(`/course/${c.course_id}`)
+                  handleOpenChange(false)
+                }}
               >
                 <BookOpen />
                 <span className="font-medium">
